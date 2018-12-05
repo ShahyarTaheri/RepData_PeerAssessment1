@@ -16,10 +16,10 @@ library(dplyr)
 if (!file.exists("activity.csv")){
   unzip("./activity.zip")
 }
-data = read.csv("activity.csv", colClasses = c("numeric","Date","numeric"))
+rawdata = read.csv("activity.csv", colClasses = c("numeric","Date","numeric"))
 
 # We can omit all entries with NA but this will remove the intervals completely 
-# data = na.omit(rawdata)
+data = na.omit(rawdata)
 ```
 
 ## What is mean total number of steps taken per day?
@@ -52,8 +52,8 @@ meansteps = mean(stepsTaken)
 mediansteps = median(stepsTaken)
 ```
 
-Average number of total steps taken is: 9354.2295082
-Median of total steps taken is: 1.0395\times 10^{4}
+Average number of total steps taken is: 1.0766189\times 10^{4}
+Median of total steps taken is: 1.0765\times 10^{4}
 
 ## What is the average daily activity pattern?
 
@@ -89,7 +89,7 @@ The highest average step count happened during interval 835
 
 
 ```r
-NAs = is.na(data$steps)
+NAs = is.na(rawdata$steps)
 naNum = sum(NAs)
 ```
 
@@ -99,9 +99,12 @@ Number of missing values in dataset 2304
 
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
+To fill in the NAs, we will take the average number of steps during that 5 minute interval over all days and assign it to that particular NA.
+
+
 
 ```r
-dataClean = data
+dataClean = rawdata
 
 for (i in 1:nrow(dataClean)){
   if (is.na(dataClean$steps[i])){
@@ -136,7 +139,7 @@ medianstepsCleaned = median(stepsTakenCleaned)
 Average number of total steps taken is: 1.0766189\times 10^{4}
 Median of total steps taken is: 1.0766189\times 10^{4}
 
-The median and mean both have increased.
+Imputing the data changed the median and left the mean unchanged. Mean and median became equal after the process.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
